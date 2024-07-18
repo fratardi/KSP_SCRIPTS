@@ -5,6 +5,8 @@ LOG "Début de la mission : " + TIME:SECONDS TO logPath.
 WAIT 1.
 LOG "Vérification du système en cours..." TO logPath.
 // Vérification si le fichier existe déjà, sinon le créer
+LOGTOLOGPATH(SHIP).
+LOGTOLOGPATH(ORBIT).
 
 
 LIST PARTS IN partList.
