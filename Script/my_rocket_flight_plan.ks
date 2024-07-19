@@ -116,7 +116,7 @@ UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not 
         PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
 
     } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 800 AND SHIP:VELOCITY:SURFACE:MAG < 900 {
-        SET MYSTEER TO HEADING(90,15).
+        SET MYSTEER TO HEADING(90,20).
         PRINT "Pitching to 20 degrees" AT(0,15).
         PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
 
@@ -130,6 +130,7 @@ UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not 
     }.
 
 }.
+
 
 
 UNTIL SHIP:APOAPSIS >= 150000  {    

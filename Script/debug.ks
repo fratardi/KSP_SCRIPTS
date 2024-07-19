@@ -19,4 +19,9 @@ FUNCTION LOGTOLOGPATH{
     LOG LOGMSG + "@:" + time   TO logPath.
 }
 RUNPATH("0:/StaticControls.ks").
-RUNPATH("0:/my_rocket_flight_plan.ks").
+
+RUNPATH("0:/optimized_orbiting.ks").
+
+// RUNPATH("0:/my_rocket_flight_plan.ks").
+
+
