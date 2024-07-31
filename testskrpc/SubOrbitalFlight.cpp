@@ -41,15 +41,6 @@ void SubOrbitalFlight::launch( float target_altitude ) {
   vessel.control().set_rcs(false);
   vessel.control().set_throttle(1);
 
-  // Countdown...
-  std::cout << "3..." << std::endl;
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-  std::cout << "2..." << std::endl;
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-  std::cout << "1..." << std::endl;
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-  std::cout << "Launch!" << std::endl;
-
 
   // Activate the first stage
   vessel.control().activate_next_stage();

@@ -15,6 +15,6 @@ int main() {
 
 
     SubOrbitalFlight flight;
-    flight.launch(100000);
+    flight.launch(85000);
     return 0;
 }
