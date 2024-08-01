@@ -45,6 +45,8 @@ void DebugKSP::display() {
   // Set up a stream to monitor the throttle button
   auto throttle_button_clicked = throttle_button.clicked_stream();
 
+
+
   auto vessel = space_center.active_vessel();
   while (true) {
 	// Handle the throttle button being clicked

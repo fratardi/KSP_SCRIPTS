@@ -9,10 +9,22 @@
 #include <krpc/services/drawing.hpp>
 
 
+
+
+krpc::services::SpaceCenter::Vessel init_flight_params(krpc::services::SpaceCenter::Vessel vessel)
+{
+  vessel.control().set_sas(false);
+  vessel.control().set_rcs(false);
+  vessel.control().set_throttle(1);
+  return(vessel);
+}
+
+
+
 void SubOrbitalFlight::launch( float target_altitude ) {
 
 
-  DebugKSP debug;
+  // DebugKSP debug;
 
     // Logique de lancement
     std::cout << "Launching the vessel." << std::endl;
@@ -20,7 +32,7 @@ void SubOrbitalFlight::launch( float target_altitude ) {
   krpc::Client conn = krpc::connect("Launch into orbit");
   krpc::services::SpaceCenter space_center(&conn);
   
-  debug.display();
+  // debug.display();
   
   
   auto vessel = space_center.active_vessel();
@@ -28,7 +40,7 @@ void SubOrbitalFlight::launch( float target_altitude ) {
 
   float turn_start_altitude = TURN_START_ALTITUDE;
   float turn_end_altitude = TURN_END_ALTITUDE;
-
+(krpc::services::SpaceCenter::Vessel)vessel = vessel;
   // Set up streams for telemetry
   auto ut = space_center.ut_stream();
   auto altitude = vessel.flight().mean_altitude_stream();
@@ -36,10 +48,14 @@ void SubOrbitalFlight::launch( float target_altitude ) {
   auto stage_2_resources = vessel.resources_in_decouple_stage(2, false);
   auto srb_fuel = stage_2_resources.amount_stream("SolidFuel");
 
+
+  vessel = init_flight_params(  vessel);
+
+
   // Pre-launch setup
-  vessel.control().set_sas(false);
-  vessel.control().set_rcs(false);
-  vessel.control().set_throttle(1);
+  // vessel.control().set_sas(false);
+  // vessel.control().set_rcs(false);
+  // vessel.control().set_throttle(1);
 
 
   // Activate the first stage

@@ -1,6 +1,6 @@
 # Compiler settings
 CXX := g++
-CXXFLAGS := -std=c++11 -Wall -Wextra -O2
+CXXFLAGS := -std=c++11 -Wall -Wextra -Werror -O2 -g3
 LDFLAGS := -lkrpc -lprotobuf -lz
 
 # Project files
