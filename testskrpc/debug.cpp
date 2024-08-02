@@ -9,7 +9,12 @@
 #include <krpc/services/ui.hpp>
 #include <krpc/services/drawing.hpp>
 
-void DebugKSP::display() {
+void DebugKSP::display(const std::string& name) {
+
+
+		std::cout << name << std::endl;
+
+
   krpc::Client conn = krpc::connect("User Interface Example");
   krpc::services::SpaceCenter space_center(&conn);
   krpc::services::UI ui(&conn);

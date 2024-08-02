@@ -21,6 +21,60 @@ krpc::services::SpaceCenter::Vessel init_flight_params(krpc::services::SpaceCent
 
 
 
+void execute_node(krpc::services::SpaceCenter::Control control, krpc::services::SpaceCenter::Node node) {
+
+
+auto burn_vector = node.remaining_burn_vector(node.reference_frame());
+double norm = std::sqrt(std::get<0>(burn_vector) * std::get<0>(burn_vector) +
+                        std::get<1>(burn_vector) * std::get<1>(burn_vector) +
+                        std::get<2>(burn_vector) * std::get<2>(burn_vector));
+
+
+
+
+
+    control.set_throttle(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Wait for engines to stabilize
+    while (norm > 0.1) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+    control.set_throttle(0);
+    node.remove();
+}
+
+
+void perform_rendezvous(krpc::services::SpaceCenter::Vessel& vessel, krpc::services::SpaceCenter::Vessel& target_vessel) {
+    try {
+        krpc::Client conn = krpc::connect("Launch into orbit");
+        krpc::services::SpaceCenter space_center(&conn);
+
+        double mu = vessel.orbit().body().gravitational_parameter();
+        double r1 = vessel.orbit().apoapsis();
+        double r2 = target_vessel.orbit().apoapsis();
+
+        // Calculating the semi-major axis of the transfer orbit
+        // double a_transfer = (r1 + r2) / 2;
+
+        // Calculate delta-v for the burns
+        double delta_v1 = std::sqrt(mu/r1) * (std::sqrt(2*r2/(r1+r2)) - 1);
+        double delta_v2 = std::sqrt(mu/r2) * (1 - std::sqrt(2*r1/(r1+r2)));
+
+        std::cout << "Planning first burn at apoapsis." << std::endl;
+        auto node1 = vessel.control().add_node(space_center.ut() + vessel.orbit().time_to_apoapsis(), delta_v1, 0, 0);
+        execute_node(vessel.control(), node1);
+
+        std::cout << "Planning second burn at periapsis." << std::endl;
+        auto node2 = vessel.control().add_node(space_center.ut() + vessel.orbit().time_to_periapsis() + vessel.orbit().period() / 2, delta_v2, 0, 0);
+        execute_node(vessel.control(), node2);
+
+        std::cout << "Rendezvous maneuver completed." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "An error occurred: " << e.what() << std::endl;
+    }
+}
+
+
+
 void SubOrbitalFlight::launch( float target_altitude ) {
 
 
@@ -162,4 +216,10 @@ void SubOrbitalFlight::launch( float target_altitude ) {
   node.remove();
 
   std::cout << "Launch complete" << std::endl;
+
+
+
+
+
+
 } 

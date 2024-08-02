@@ -62,7 +62,9 @@
 		"streambuf": "cpp",
 		"thread": "cpp",
 		"typeinfo": "cpp",
-		"variant": "cpp"
+		"variant": "cpp",
+		"source_location": "cpp",
+		"cinttypes": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "disabled"
 }
