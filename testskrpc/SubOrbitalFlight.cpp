@@ -25,52 +25,53 @@ void execute_node(krpc::services::SpaceCenter::Control control, krpc::services::
 
 
 auto burn_vector = node.remaining_burn_vector(node.reference_frame());
-double norm = std::sqrt(std::get<0>(burn_vector) * std::get<0>(burn_vector) +
-                        std::get<1>(burn_vector) * std::get<1>(burn_vector) +
-                        std::get<2>(burn_vector) * std::get<2>(burn_vector));
+double norm = std::sqrt(
+						std::get<0>(burn_vector) * std::get<0>(burn_vector) +
+						std::get<1>(burn_vector) * std::get<1>(burn_vector) +
+						std::get<2>(burn_vector) * std::get<2>(burn_vector));
 
 
 
 
 
-    control.set_throttle(1);
-    std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Wait for engines to stabilize
-    while (norm > 0.1) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    }
-    control.set_throttle(0);
-    node.remove();
+	control.set_throttle(1);
+	std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Wait for engines to stabilize
+	while (norm > 0.1) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	}
+	control.set_throttle(0);
+	node.remove();
 }
 
 
 void perform_rendezvous(krpc::services::SpaceCenter::Vessel& vessel, krpc::services::SpaceCenter::Vessel& target_vessel) {
-    try {
-        krpc::Client conn = krpc::connect("Launch into orbit");
-        krpc::services::SpaceCenter space_center(&conn);
+	try {
+		krpc::Client conn = krpc::connect("Launch into orbit");
+		krpc::services::SpaceCenter space_center(&conn);
 
-        double mu = vessel.orbit().body().gravitational_parameter();
-        double r1 = vessel.orbit().apoapsis();
-        double r2 = target_vessel.orbit().apoapsis();
+		double mu = vessel.orbit().body().gravitational_parameter();
+		double r1 = vessel.orbit().apoapsis();
+		double r2 = target_vessel.orbit().apoapsis();
 
-        // Calculating the semi-major axis of the transfer orbit
-        // double a_transfer = (r1 + r2) / 2;
+		// Calculating the semi-major axis of the transfer orbit
+		// double a_transfer = (r1 + r2) / 2;
 
-        // Calculate delta-v for the burns
-        double delta_v1 = std::sqrt(mu/r1) * (std::sqrt(2*r2/(r1+r2)) - 1);
-        double delta_v2 = std::sqrt(mu/r2) * (1 - std::sqrt(2*r1/(r1+r2)));
+		// Calculate delta-v for the burns
+		double delta_v1 = std::sqrt(mu/r1) * (std::sqrt(2*r2/(r1+r2)) - 1);
+		double delta_v2 = std::sqrt(mu/r2) * (1 - std::sqrt(2*r1/(r1+r2)));
 
-        std::cout << "Planning first burn at apoapsis." << std::endl;
-        auto node1 = vessel.control().add_node(space_center.ut() + vessel.orbit().time_to_apoapsis(), delta_v1, 0, 0);
-        execute_node(vessel.control(), node1);
+		std::cout << "Planning first burn at apoapsis." << std::endl;
+		auto node1 = vessel.control().add_node(space_center.ut() + vessel.orbit().time_to_apoapsis(), delta_v1, 0, 0);
+		execute_node(vessel.control(), node1);
 
-        std::cout << "Planning second burn at periapsis." << std::endl;
-        auto node2 = vessel.control().add_node(space_center.ut() + vessel.orbit().time_to_periapsis() + vessel.orbit().period() / 2, delta_v2, 0, 0);
-        execute_node(vessel.control(), node2);
+		std::cout << "Planning second burn at periapsis." << std::endl;
+		auto node2 = vessel.control().add_node(space_center.ut() + vessel.orbit().time_to_periapsis() + vessel.orbit().period() / 2, delta_v2, 0, 0);
+		execute_node(vessel.control(), node2);
 
-        std::cout << "Rendezvous maneuver completed." << std::endl;
-    } catch (const std::exception& e) {
-        std::cerr << "An error occurred: " << e.what() << std::endl;
-    }
+		std::cout << "Rendezvous maneuver completed." << std::endl;
+	} catch (const std::exception& e) {
+		std::cerr << "An error occurred: " << e.what() << std::endl;
+	}
 }
 
 
@@ -80,15 +81,15 @@ void SubOrbitalFlight::launch( float target_altitude ) {
 
   // DebugKSP debug;
 
-    // Logique de lancement
-    std::cout << "Launching the vessel." << std::endl;
+	// Logique de lancement
+	std::cout << "Launching the vessel." << std::endl;
 
   krpc::Client conn = krpc::connect("Launch into orbit");
   krpc::services::SpaceCenter space_center(&conn);
-  
+
   // debug.display();
-  
-  
+
+
   auto vessel = space_center.active_vessel();
 
 
@@ -121,31 +122,31 @@ void SubOrbitalFlight::launch( float target_altitude ) {
   bool srbs_separated = false;
   double turn_angle = 0;
   while (true) {
-    // Gravity turn
-    if (altitude() > turn_start_altitude && altitude() < turn_end_altitude) {
-      double frac = (altitude() - turn_start_altitude)
-                    / (turn_end_altitude - turn_start_altitude);
-      double new_turn_angle = frac * 90.0;
-      if (std::abs(new_turn_angle - turn_angle) > 0.5) {
-        turn_angle = new_turn_angle;
-        vessel.auto_pilot().target_pitch_and_heading(90.0 - turn_angle, 90.0);
-      }
-    }
+	// Gravity turn
+	if (altitude() > turn_start_altitude && altitude() < turn_end_altitude) {
+	  double frac = (altitude() - turn_start_altitude)
+					/ (turn_end_altitude - turn_start_altitude);
+	  double new_turn_angle = frac * 90.0;
+	  if (std::abs(new_turn_angle - turn_angle) > 0.5) {
+		turn_angle = new_turn_angle;
+		vessel.auto_pilot().target_pitch_and_heading(90.0 - turn_angle, 90.0);
+	  }
+	}
 
-    // Separate SRBs when finished
-    if (!srbs_separated) {
-      if (srb_fuel() < 0.1) {
-        vessel.control().activate_next_stage();
-        srbs_separated = true;
-        std::cout << "SRBs separated" << std::endl;
-      }
-    }
+	// Separate SRBs when finished
+	if (!srbs_separated) {
+	  if (srb_fuel() < 0.1) {
+		vessel.control().activate_next_stage();
+		srbs_separated = true;
+		std::cout << "SRBs separated" << std::endl;
+	  }
+	}
 
-    // Decrease throttle when approaching target apoapsis
-    if (apoapsis() > target_altitude * 0.9) {
-      std::cout << "Approaching target apoapsis" << std::endl;
-      break;
-    }
+	// Decrease throttle when approaching target apoapsis
+	if (apoapsis() > target_altitude * 0.9) {
+	  std::cout << "Approaching target apoapsis" << std::endl;
+	  break;
+	}
   }
 
   // Disable engines when target apoapsis is reached
@@ -170,7 +171,7 @@ void SubOrbitalFlight::launch( float target_altitude ) {
   double v2 = std::sqrt(mu * ((2.0 / r) - (1.0 / a2)));
   double delta_v = v2 - v1;
   auto node = vessel.control().add_node(
-    ut() + vessel.orbit().time_to_apoapsis(), delta_v);
+	ut() + vessel.orbit().time_to_apoapsis(), delta_v);
 
   // Calculate burn time (using rocket equation)
   double F = vessel.available_thrust();
@@ -200,7 +201,7 @@ void SubOrbitalFlight::launch( float target_altitude ) {
   std::cout << "Executing burn" << std::endl;
   vessel.control().set_throttle(1);
   std::this_thread::sleep_for(
-    std::chrono::milliseconds(static_cast<int>((burn_time - 0.1) * 1000)));
+	std::chrono::milliseconds(static_cast<int>((burn_time - 0.1) * 1000)));
   std::cout << "Fine tuning" << std::endl;
   vessel.control().set_throttle(0.05);
   auto remaining_burn = node.remaining_burn_vector_stream(node.reference_frame());
@@ -222,4 +223,4 @@ void SubOrbitalFlight::launch( float target_altitude ) {
 
 
 
-} 
+}
