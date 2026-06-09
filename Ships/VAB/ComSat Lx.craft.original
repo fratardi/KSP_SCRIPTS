@@ -1,5 +1,5 @@
 ship = #autoLOC_501216
-version = 1.12.0
+version = 1.6.0
 description = #autoLOC_501217
 type = VAB
 size = 3.24235153,10.0886717,3.57649088
@@ -8,8 +8,6 @@ persistentId = 3259400074
 rot = 0,0,0,0
 missionFlag = Squad/Flags/default
 vesselType = Debris
-upgraded = 1.12 LV-1 Ant Liquid Fuel Engine replacement // Replaces the old LV-1 Ant Liquid Fuel Engine for the new LV-1 Ant Liquid Fuel Engine.
-upgraded = 1.8 ModuleControlSurface // Upgrades control authority settings for control surfaces.
 PART
 {
 	part = probeCoreOcto.v2_4291899392
@@ -373,9 +371,9 @@ PART
 	modCost = 0
 	modMass = 0
 	modSize = 0,0,0
-	link = microEngine.v2_4291830546
+	link = microEngine_4291830546
 	attN = top,probeCoreOcto.v2_4291899392_0|0.1742737|0
-	attN = bottom,microEngine.v2_4291830546_0|-0.1742737|0
+	attN = bottom,microEngine_4291830546_0|-0.1742737|0
 	EVENTS
 	{
 	}
@@ -410,7 +408,7 @@ PART
 }
 PART
 {
-	part = microEngine.v2_4291830546
+	part = microEngine_4291830546
 	partName = Part
 	persistentId = 459817534
 	pos = -0.0411550179,7.96535015,-5.7554405E-07
@@ -435,7 +433,7 @@ PART
 	modSize = 0,0,0
 	link = Decoupler.0_4291783810
 	attN = top,miniFuelTank_4291844334_0|0|0
-	attN = bottom,Decoupler.0_4291783810_0|-0.281698495|0
+	attN = bottom,Decoupler.0_4291783810_0|-0.2816985|0
 	EVENTS
 	{
 	}
@@ -837,7 +835,7 @@ PART
 	modMass = 0
 	modSize = 0,0,0
 	link = fairingSize1_4291772426
-	attN = top,microEngine.v2_4291830546_0|0.0325|0
+	attN = top,microEngine_4291830546_0|0.0325|0
 	attN = bottom,fairingSize1_4291772426_0|-0.0325|0
 	EVENTS
 	{
@@ -1696,7 +1694,6 @@ PART
 		partDeployInvert = False
 		authorityLimiter = 4.19999981
 		stagingEnabled = True
-		deployAngle = 0.629999936
 		EVENTS
 		{
 		}
@@ -1774,7 +1771,6 @@ PART
 		partDeployInvert = False
 		authorityLimiter = 4.19999981
 		stagingEnabled = True
-		deployAngle = 0.629999936
 		EVENTS
 		{
 		}
@@ -1852,7 +1848,6 @@ PART
 		partDeployInvert = False
 		authorityLimiter = 4.19999981
 		stagingEnabled = True
-		deployAngle = 0.629999936
 		EVENTS
 		{
 		}

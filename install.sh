@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Définir le chemin de base pour le répertoire de KSP
-KSP_BASE="/home/$(whoami)/snap/steam/common/.local/share/Steam/steamapps/common/Kerbal Space Program"
+KSP_BASE="/mnt/500GB_SSD/SteamLibrary/steamapps/common/Kerbal Space Program/"
 
 # Le répertoire dans votre chemin de travail actuel où les fichiers sont modifiés
 WORK_DIR="$(pwd)"
